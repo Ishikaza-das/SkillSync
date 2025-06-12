@@ -11,7 +11,7 @@ const jobSchema = new mongoose.Schema({
     position:{type:Number,required:true},
     company:{type:mongoose.Schema.Types.ObjectId,ref:'Company',required:true},
     createdBy:{type:mongoose.Schema.Types.ObjectId,ref:'User',required:true},
-    application:[{type:mongoose.Schema.Types.ObjectId,ref:'Application'}]
+    applications:[{type:mongoose.Schema.Types.ObjectId,ref:'Application'}]
 },{timestamps:true});
 
 module.exports = mongoose.model('Job',jobSchema);
