@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 
 const userRoute = require('./routes/user.route');
 const companyRoute = require('./routes/company.route');
+const jobRoute = require('./routes/job.route');
 
 
 const app = express();
@@ -14,5 +15,6 @@ app.use(cookieParser());
 
 app.use('/ss/v1/user',userRoute);
 app.use('/ss/v1/company',companyRoute);
+app.use('/ss/v1/job',jobRoute);
 
 module.exports = app;
