@@ -1,16 +1,19 @@
 const express = require('express');
-const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
+require('dotenv').config();
 
 const userRoute = require('./routes/user.route');
 const companyRoute = require('./routes/company.route');
 const jobRoute = require('./routes/job.route');
 const applicationRoute = require('./routes/application.route');
 
-
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND, 
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
