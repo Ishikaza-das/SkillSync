@@ -11,6 +11,3 @@ frontend/.env
 
 # OS files
 .DS_Store
-
-# backup
-/backup-working
