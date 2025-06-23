@@ -7,6 +7,8 @@ import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/store/authSlice";
 
 const Signup = () => {
 
@@ -20,6 +22,8 @@ const Signup = () => {
   });
 
   const navigate = useNavigate();
+  const {loading} = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
   
   const changeEventHandler = (e) => {
     setInput({...input,[e.target.name]:e.target.value});
@@ -41,6 +45,7 @@ const Signup = () => {
       formData.append("file",input.file);
     }
     try {
+      dispatch(setLoading(true));
       const response = await axios.post(`${import.meta.env.VITE_USER_API}/register`,formData,{
         headers:{
           "Content-Type":"multipart/form-data"
@@ -53,6 +58,8 @@ const Signup = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally{
+      dispatch(setLoading(false));
     }
   }
 
@@ -97,7 +104,20 @@ const Signup = () => {
               </div>
             </RadioGroup>
           </div>
-          <Button type="submit" className="my-4 w-full h-10" variant="purple2">Sign Up</Button>
+          {loading ? (
+            <Button className="my-4 w-full h-10" variant="purple2">
+              {" "}
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait...
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="my-4 w-full h-10"
+              variant="purple2"
+            >
+              Signup
+            </Button>
+          )}
           <span className="text-sm">Already have an account ? <Link to="/login" className="text-purple-600 ml-2">Login</Link></span>
         </form>
       </div>

@@ -18,18 +18,18 @@ const appRouter = createBrowserRouter([
     path:'/signup',
     element:<Signup/>
   },
-  {
-    path:'/',
-    element:<Home/>
-  },
-  {
-    path:'/',
-    element:<Home/>
-  },
-  {
-    path:'/',
-    element:<Home/>
-  },
+  // {
+  //   path:'/',
+  //   element:<Home/>
+  // },
+  // {
+  //   path:'/',
+  //   element:<Home/>
+  // },
+  // {
+  //   path:'/',
+  //   element:<Home/>
+  // },
 ])
 
 
