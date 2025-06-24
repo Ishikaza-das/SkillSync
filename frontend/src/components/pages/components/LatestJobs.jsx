@@ -9,7 +9,7 @@ const LatestJobs = () => {
       <h1 className='text-4xl font-bold'><span className='text-purple-600'>Latest</span> Job Openings</h1>
       <div className='grid grid-cols-3 gap-4 my-5'>
         {
-            randomJobs.slice(0,6).map((item,index) => <LatestJobcards/>)
+            randomJobs.slice(0,6).map((item,index) => <LatestJobcards key={index}/>)
         }
       </div>
         
