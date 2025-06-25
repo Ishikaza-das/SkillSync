@@ -43,7 +43,7 @@ const Navbar = () => {
                       <AvatarImage src="https://github.com/shadcn.png" />
                     </Avatar>
                     <div>
-                      <h4 className="font-medium">Ritesh Das</h4>
+                      <h4 className="font-medium">{user.fullname}</h4>
                       <p className="text-sm text-muted-foreground">
                         Lorem ipsum dolor sit amet.
                       </p>
@@ -52,7 +52,7 @@ const Navbar = () => {
                   <div className="flex flex-col my-2 text-gray-500">
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <User2 />
-                      <Button variant="link">View Profile</Button>
+                      <Button variant="link"><Link to='/profile'>View Profile</Link></Button>
                     </div>
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <LogOut />
