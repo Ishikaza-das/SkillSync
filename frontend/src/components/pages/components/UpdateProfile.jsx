@@ -47,6 +47,8 @@ const UpdateProfile = ({ open, setOpen }) => {
 
   const submitHandler = async(e) => {
     e.preventDefault();
+    setLoading(true);
+    
     const formData = new FormData();
     formData.append("fullname",input.fullname);
     formData.append("email",input.email);
