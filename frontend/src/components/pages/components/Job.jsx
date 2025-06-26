@@ -3,8 +3,15 @@ import { Button } from "../../ui/button";
 import React from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const Job = () => {
+  const navigate = useNavigate();
+  const jobId = 'amfanojfnanf'
+  const nav = () => {
+    navigate(`/description/${jobId}`)
+  }
+
   return (
     <div className="p-5 rounded-md shadow-xl bg-white border border-gray-200">
       <div className="flex items-center justify-between">
@@ -45,7 +52,7 @@ const Job = () => {
         </Badge>
       </div>
       <div className="flex items-center gap-4 mt-5">
-        <Button variant='purple2'>Details</Button>
+        <Button variant='purple2' onClick={nav}>Details</Button>
         <Button variant='purple'>Save for Later</Button>
       </div>
     </div>
