@@ -37,44 +37,49 @@ const UpdateProfile = ({ open, setOpen }) => {
   });
 
   const chnageEventHandler = (e) => {
-    setInput({...input,[e.target.name]:e.target.value});
-  }
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
 
   const chnageFileHandler = (e) => {
     const file = e.target.files?.[0];
-    setInput({...input,file})
-  }
+    setInput({ ...input, file });
+  };
 
-  const submitHandler = async(e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    
     const formData = new FormData();
-    formData.append("fullname",input.fullname);
-    formData.append("email",input.email);
-    formData.append("phonenumber",input.phoneNumber);
-    formData.append("bio",input.bio);
-    formData.append("skills",input.skills);
-    if(input.file){
-      formData.append("file",input.file);
+    formData.append("fullname", input.fullname);
+    formData.append("email", input.email);
+    formData.append("phonenumber", input.phoneNumber);
+    formData.append("bio", input.bio);
+    formData.append("skills", input.skills);
+    if (input.file) {
+      formData.append("file", input.file);
     }
     try {
-        const response = await axios.put(`${import.meta.env.VITE_USER_API}/profile/update`,formData,{
-        headers:{
-          "Content-Type":"multipart/form-data"
-        },
-        withCredentials:true,
-      });
-      if(response.data.success){
+      setLoading(true);
+      const response = await axios.put(
+        `${import.meta.env.VITE_USER_API}/profile/update`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
+      if (response.data.success) {
         dispatch(setUser(response.data.user));
         toast.success(response.data.message);
       }
     } catch (error) {
-        console.log(error);
-        toast.error(error.response.data.message);
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
     setOpen(false);
-  }
+  };
 
   return (
     <div>
@@ -92,10 +97,10 @@ const UpdateProfile = ({ open, setOpen }) => {
                 <Input
                   id="name"
                   className="col-span-3"
-                  name="name"
+                  name="fullname"
                   value={input.fullname}
                   onChange={chnageEventHandler}
-                  type='text'
+                  type="text"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -108,7 +113,7 @@ const UpdateProfile = ({ open, setOpen }) => {
                   name="email"
                   value={input.email}
                   onChange={chnageEventHandler}
-                  type='email'
+                  type="email"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -118,10 +123,10 @@ const UpdateProfile = ({ open, setOpen }) => {
                 <Input
                   id="phonenumber"
                   className="col-span-3"
-                  name="phonenumber"
+                  name="phoneNumber"
                   value={input.phoneNumber}
                   onChange={chnageEventHandler}
-                  type="text" 
+                  type="text"
                   maxLength={10}
                 />
               </div>

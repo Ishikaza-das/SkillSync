@@ -52,10 +52,10 @@ const Profile = () => {
           </div>
         </div>
         <div className="my-5">
-          <h1>Skills</h1>
+          <h1 className="text-md font-bold">Skills</h1>
           <div className="flex items-center gap-1">
             {user.profile.skills.length != 0 ? (
-              user.profile.skills.map((item, index) => <Badge key={index}>{item}</Badge>)
+              user.profile.skills.map((item, index) => <Badge className="text-blue-700 font-bold" variant="ghost" key={index}>{item}</Badge>)
             ) : (
               <span>No Skill Mentioned</span>
             )}
@@ -66,10 +66,10 @@ const Profile = () => {
           {isHaveResume ? (
             <a
               target="blank"
-              href="https://github.com/Ishikaza-das"
+              href={user?.profile?.resume}
               className="text-blue-800 w-full hover:underline cursor-pointer"
             >
-              Ritesh Resume
+              {user.profile.resumename}
             </a>
           ) : (
             <span>Not Uploaded</span>
