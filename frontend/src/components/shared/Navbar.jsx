@@ -1,14 +1,32 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+import axios from "axios";
+import { setUser } from "@/store/authSlice";
 
 const Navbar = () => {
   // const user = true;
   const {user} = useSelector(store => store.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
+  const LogoutHandler = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_USER_API}/logout`,{withCredentials:true});
+      if(response.data.success){
+        dispatch(setUser(null));
+        navigate('/');
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  }
 
   return (
     <div className="bg-white">
@@ -56,7 +74,7 @@ const Navbar = () => {
                     </div>
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <LogOut />
-                      <Button variant="link">Logout</Button>
+                      <Button variant="link" onClick={LogoutHandler} className='cursor-pointer'>Logout</Button>
                     </div>
                   </div>
                 </div>
