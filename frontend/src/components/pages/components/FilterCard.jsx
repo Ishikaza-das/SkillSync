@@ -18,7 +18,7 @@ const locations = ['Delhi NCR', 'Bangalore', 'Hyderabad', 'Pune', 'Odisha', 'Mum
 
 const FilterCard = () => {
   return (
-    <div className='w-full bg-white p-3 rounded-md'>
+    <div className='w-full bg-white p-3 rounded-md border border-gray-200'>
       <h1 className='font-bold text-lg mb-3'>Filter Jobs</h1>
       <hr className='mb-4' />
 
