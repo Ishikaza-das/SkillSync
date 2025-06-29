@@ -51,14 +51,14 @@ const Navbar = () => {
             <Popover>
               <PopoverTrigger>
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src={user.profile.profilephoto} className="object-cover"/>
+                  <AvatarImage src={user.profile?.profilephoto || "https://github.com/shadcn.png"} className="object-cover"/>
                 </Avatar>
               </PopoverTrigger>
               <PopoverContent className="w-80">
                 <div>
                   <div className="flex gap-2 space-y-2">
                     <Avatar className="cursor-pointer">
-                      <AvatarImage src={user.profile.profilephoto} className="object-cover"/>
+                      <AvatarImage src={user.profile?.profilephoto || "https://github.com/shadcn.png"} className="object-cover"/>
                     </Avatar>
                     <div>
                       <h4 className="font-medium">{user.fullname}</h4>
