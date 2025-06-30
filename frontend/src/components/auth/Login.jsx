@@ -40,6 +40,7 @@ const Login = () => {
           withCredentials: true,
         }
       );
+       console.log("API Response:", response.data);
       if (response.data.success) {
         dispatch(setUser(response.data.user));
         navigate("/");
