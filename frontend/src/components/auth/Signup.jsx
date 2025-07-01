@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../shared/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -23,16 +23,17 @@ const Signup = () => {
   });
 
   const navigate = useNavigate();
-  const {loading} = useSelector((store) => store.auth);
+  const {loading,user} = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   
   const changeEventHandler = (e) => {
     setInput({...input,[e.target.name]:e.target.value});
   }
 
-  const chnageFileHandler = (e) => {
-    setInput({...input, file: e.target.files?.[0]})
-  }
+   const chnageFileHandler = (e) => {
+    const file = e.target.files?.[0] || ""; 
+    setInput({ ...input, file });
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -54,15 +55,22 @@ const Signup = () => {
         withCredentials:true,
       });
       if(response.data.success){
-        navigate('/login')
         toast.success(response.data.message);
+        navigate('/login')
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.response.data.message);
     } finally{
       dispatch(setLoading(false));
     }
   }
+
+  useEffect(()=>{
+        if(user){
+            navigate("/");
+        }
+    },[])
 
   return (
     <div>

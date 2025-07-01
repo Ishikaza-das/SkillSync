@@ -15,9 +15,9 @@ const register = async (req, res) => {
       });
     }
 
-    const file = req.file;
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    // const file = req.file;
+    // const fileUri = getDataUri(file);
+    // const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
 
     const user = await User.findOne({ email });
@@ -27,6 +27,19 @@ const register = async (req, res) => {
         success: false,
       });
     }
+
+    const profile = {};
+
+    if (req.file) {
+      try {
+        const fileUri = getDataUri(req.file);
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        profile.profilephoto = cloudResponse.secure_url;
+      } catch (uploadError) {
+        console.error('File upload error:', uploadError);
+      }
+    }
+
     const hashedPassword = await Bcrypt.hash(password, 10);
     await User.create({
       fullname,
@@ -34,9 +47,10 @@ const register = async (req, res) => {
       phonenumber,
       password: hashedPassword,
       role,
-      profile:{
-        profilephoto: cloudResponse.secure_url
-      }
+      // profile:{
+      //   profilephoto: cloudResponse.secure_url
+      // }
+      profile
     });
     return res.status(201).json({
       message: "Account created successfully",
