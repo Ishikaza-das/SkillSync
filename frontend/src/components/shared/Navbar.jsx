@@ -10,23 +10,25 @@ import axios from "axios";
 import { setUser } from "@/store/authSlice";
 
 const Navbar = () => {
-  // const user = true;
-  const {user} = useSelector(store => store.auth);
+  const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const LogoutHandler = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_USER_API}/logout`,{withCredentials:true});
-      if(response.data.success){
+      const response = await axios.get(
+        `${import.meta.env.VITE_USER_API}/logout`,
+        { withCredentials: true }
+      );
+      if (response.data.success) {
         dispatch(setUser(null));
-        navigate('/');
+        navigate("/");
         toast.success(response.data.message);
       }
     } catch (error) {
       toast.error(error.response.data);
     }
-  }
+  };
 
   return (
     <div className="bg-white">
@@ -38,27 +40,62 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-12">
           <ul className="flex font-medium items-center gap-5">
-            <li><Link to='/'>Home</Link></li>
-            <li><Link to='/jobs'>Jobs</Link></li>
-            <li><Link to='/browse'>Browse</Link></li>
+            {user && user.role === "recruiters" ? (
+              <>
+                <li>
+                  <Link to="/companies">Company</Link>
+                </li>
+                <li>
+                  <Link to="/company/jobs">Jobs</Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <Link to="/jobs">Jobs</Link>
+                </li>
+                <li>
+                  <Link to="/browse">Browse</Link>
+                </li>
+              </>
+            )}
           </ul>
           {!user ? (
             <div className="gap-2 flex items-center">
-              <Link to='/login'><Button variant="purple">Login</Button></Link>
-              <Link to='/signup'><Button variant="purple2">Signup</Button></Link> 
+              <Link to="/login">
+                <Button variant="purple">Login</Button>
+              </Link>
+              <Link to="/signup">
+                <Button variant="purple2">Signup</Button>
+              </Link>
             </div>
           ) : (
             <Popover>
               <PopoverTrigger>
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src={user.profile?.profilephoto || "https://github.com/shadcn.png"} className="object-cover"/>
+                  <AvatarImage
+                    src={
+                      user.profile?.profilephoto ||
+                      "https://github.com/shadcn.png"
+                    }
+                    className="object-cover"
+                  />
                 </Avatar>
               </PopoverTrigger>
               <PopoverContent className="w-80">
                 <div>
                   <div className="flex gap-2 space-y-2">
                     <Avatar className="cursor-pointer">
-                      <AvatarImage src={user.profile?.profilephoto || "https://github.com/shadcn.png"} className="object-cover"/>
+                      <AvatarImage
+                        src={
+                          user.profile?.profilephoto ||
+                          "https://github.com/shadcn.png"
+                        }
+                        className="object-cover"
+                      />
                     </Avatar>
                     <div>
                       <h4 className="font-medium">{user.fullname}</h4>
@@ -68,13 +105,23 @@ const Navbar = () => {
                     </div>
                   </div>
                   <div className="flex flex-col my-2 text-gray-500">
-                    <div className="flex w-fit items-center gap-2 cursor-pointer">
-                      <User2 />
-                      <Button variant="link"><Link to='/profile'>View Profile</Link></Button>
-                    </div>
+                    {user && user.role === "candidates" && (
+                      <div className="flex w-fit items-center gap-2 cursor-pointer">
+                        <User2 />
+                        <Button variant="link">
+                          <Link to="/profile">View Profile</Link>
+                        </Button>
+                      </div>
+                    )}
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <LogOut />
-                      <Button variant="link" onClick={LogoutHandler} className='cursor-pointer'>Logout</Button>
+                      <Button
+                        variant="link"
+                        onClick={LogoutHandler}
+                        className="cursor-pointer"
+                      >
+                        Logout
+                      </Button>
                     </div>
                   </div>
                 </div>

@@ -41,22 +41,14 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      // console.log("API Response:", response.data);
       if (response.data.success) {
         dispatch(setUser(response.data.user));
-        // Debug: Log state after setting user
-        // console.log("Redux State after login:", store.getState());
-
-        // Debug: Check localStorage
-        // console.log(
-        //   "LocalStorage after login:",
-        //   localStorage.getItem("persist:root")
-        // );
         navigate("/");
         toast.success(response.data.message);
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.response.data.message);
     } finally {
       dispatch(setLoading(false));
     }
