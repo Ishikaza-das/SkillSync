@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "../../store/authSlice";
 import { Loader2 } from "lucide-react";
+// import store from "@/store/store";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -40,9 +41,17 @@ const Login = () => {
           withCredentials: true,
         }
       );
-       console.log("API Response:", response.data);
+      // console.log("API Response:", response.data);
       if (response.data.success) {
         dispatch(setUser(response.data.user));
+        // Debug: Log state after setting user
+        // console.log("Redux State after login:", store.getState());
+
+        // Debug: Check localStorage
+        // console.log(
+        //   "LocalStorage after login:",
+        //   localStorage.getItem("persist:root")
+        // );
         navigate("/");
         toast.success(response.data.message);
       }
