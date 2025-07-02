@@ -32,7 +32,7 @@ const CompaniesTable = () => {
                     </PopoverTrigger>
                     <PopoverContent className='w-32'>
                         <div className='flex items-center gap-2 w-fit'>
-                            <Edit2 className='m-4'/>
+                            <Edit2 className='w-4'/>
                             <span>Edit</span>
                         </div>
                     </PopoverContent>
