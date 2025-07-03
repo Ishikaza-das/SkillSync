@@ -13,7 +13,7 @@ const Home = () => {
   const { user } = useSelector((store) => store.auth);
   const navigate = useNavigate();
   useEffect(() => {
-    if (user.role === "recruiters") {
+    if (user?.role === "recruiters") {
       navigate("/companies");
     }
   }, []);
