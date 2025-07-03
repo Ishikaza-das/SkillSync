@@ -11,3 +11,6 @@ const companySlice = createSlice({
         }
     }
 });
+
+export const {setSingleCompany} = companySlice.actions;
+export default companySlice.reducer;

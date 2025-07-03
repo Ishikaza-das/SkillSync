@@ -2,13 +2,16 @@ import Navbar from "@/components/shared/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { setSingleCompany } from "@/store/companySlice";
 import axios from "axios";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const CompanyCreate = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const cancel = () => {
     navigate('/companies')
   }
@@ -22,6 +25,7 @@ const CompanyCreate = () => {
         withCredentials:true
       });
       if(response.data.success){
+        dispatch(setSingleCompany(response.data.company));
         toast.success(response.data.message);
         const companyId = response.data.company._id;
         navigate(`/company/${companyId}`);
