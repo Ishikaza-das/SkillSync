@@ -2,9 +2,11 @@ import Navbar from "@/components/shared/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
-import { ArrowLeft } from "lucide-react";
-import React, { useState } from "react";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -16,7 +18,7 @@ const CompanySetup = () => {
     location: "",
     file: null,
   });
-
+  const {singleCompany} = useSelector(store => store.company)
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const navigate = useNavigate()
@@ -31,8 +33,8 @@ const CompanySetup = () => {
   };
 
   const back = () => {
-    navigate('/companies')
-  }
+    navigate('/companies');
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -66,6 +68,17 @@ const CompanySetup = () => {
       setLoading(false);
     }
   };
+
+  useEffect( () => {
+    setInput({
+    name: singleCompany.name || "",
+    description: singleCompany.description || "",
+    website: singleCompany.website || "",
+    location: singleCompany.location || "",
+    file: singleCompany.file || null,
+    })
+  },[singleCompany]);
+
   return (
     <div>
       <Navbar />
@@ -105,7 +118,7 @@ const CompanySetup = () => {
             </div>
             <div className="space-y-2">
               <Label>Company Description</Label>
-              <Input
+              <Textarea
                 type="text"
                 name="description"
                 value={input.description}
