@@ -18,24 +18,24 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const CompaniesTable = () => {
-  const { companies, setSearchCompanyByText } = useSelector(
+  const { companies, searchCompanyByText } = useSelector(
     (store) => store.company
   );
   const [filterCompany, setFilterCompany] = useState(companies);
 
   useEffect(() => {
     const filteredCompany =
-      companies.length >= 0 &&
-      companies.filter((company) => {
-        if (!setSearchCompanyByText) {
+      companies?.length >= 0 &&
+      companies?.filter((company) => {
+        if (!searchCompanyByText) {
           return true;
         }
         return company?.name
           ?.toLowerCase()
-          .includes(setSearchCompanyByText.toLowerCase());
+          .includes(searchCompanyByText.toLowerCase());
       });
     setFilterCompany(filteredCompany);
-  }, [companies, setSearchCompanyByText]);
+  }, [companies, searchCompanyByText]);
 
   return (
     <div>
