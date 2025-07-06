@@ -15,7 +15,7 @@ const JobDescription = () => {
     singleJob?.applications?.some(
       (application) => application.applicant === user?._id
     ) || false;
-   const [isApplied, setIsApplied] = useState(isintiallyApplied);
+  const [isApplied, setIsApplied] = useState(isintiallyApplied);
 
   const params = useParams();
   const jobId = params.id;
@@ -24,11 +24,15 @@ const JobDescription = () => {
   const applyJobHandler = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_APPLY_JOB}/apply/${jobId}`,{withCredentials: true}
+        `${import.meta.env.VITE_APPLY_JOB}/apply/${jobId}`,
+        { withCredentials: true }
       );
       if (response.data.success) {
         setIsApplied(true);
-        const updatedSingleJob = {...singleJob,applications:[...singleJob.applications,{applicant:user?._id}]};
+        const updatedSingleJob = {
+          ...singleJob,
+          applications: [...singleJob.applications, { applicant: user?._id }],
+        };
         dispatch(setSingleJob(updatedSingleJob));
         toast.success(response.data.message);
       }
@@ -47,7 +51,11 @@ const JobDescription = () => {
         );
         if (response.data.success) {
           dispatch(setSingleJob(response.data.job));
-          setIsApplied(response.data.job.applications.some(application => application.applicant === user?._id));
+          setIsApplied(
+            response.data.job.applications.some(
+              (application) => application.applicant === user?._id
+            )
+          );
         }
       } catch (error) {
         console.log(error);
@@ -111,6 +119,14 @@ const JobDescription = () => {
           Experience:{" "}
           <span className="pl-4 font-normal text-gray-800">
             {singleJob?.experienceLevel} Year
+          </span>
+        </h1>
+        <h1 className="font-bold my-1">
+          Requirements:{" "}
+          <span className="pl-4 font-normal text-gray-800">
+            {Array.isArray(singleJob?.requirements)
+              ? singleJob.requirements.join(", ")
+              : singleJob?.requirements}
           </span>
         </h1>
         <h1 className="font-bold my-1">
