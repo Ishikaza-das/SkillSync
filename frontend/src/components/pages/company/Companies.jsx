@@ -16,7 +16,7 @@ const Companies = () => {
     navigate('/companies/create');
   }
 
-  const {input, setInput} = useState('');
+  const [input, setInput] = useState("");
   const dispatch = useDispatch();
 
   useEffect( () => {
