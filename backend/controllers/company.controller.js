@@ -10,7 +10,7 @@ const registerCompany = async (req, res) => {
         message: "Company name is required",
         success: false,
       });
-    };
+    }
     let company = await Company.findOne({ name: companyName });
     if (company) {
       return res.status(400).json({
@@ -29,7 +29,7 @@ const registerCompany = async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({ message: error.message, success: false });
-  };
+  }
 };
 
 const getCompany = async (req, res) => {
@@ -43,8 +43,8 @@ const getCompany = async (req, res) => {
       });
     }
     return res.status(200).json({
-        companies,
-        success: true
+      companies,
+      success: true,
     });
   } catch (error) {
     res.status(400).json({ message: error.message, success: false });
@@ -73,30 +73,36 @@ const getCompanyById = async (req, res) => {
 const updateCompany = async (req, res) => {
   try {
     const { name, description, website, location } = req.body;
-    const file = req.file;
+    let logo;
+    // const file = req.file;
+    if (req.file) {
+      try {
+        const fileUri = getDataUri(file);
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        logo = cloudResponse.secure_url;
+      } catch (error) {
+        console.error("File upload error:", uploadError);
+      }
+    }
 
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-    const logo = cloudResponse.secure_url;
-
-    const updatedata = { name, description, website, location, logo};
+    const updatedata = { name, description, website, location, logo };
 
     const company = await Company.findByIdAndUpdate(req.params.id, updatedata, {
-      new: true
+      new: true,
     });
     if (!company) {
       return res.status(404).json({
         message: "Company not found",
         success: false,
       });
-    };
+    }
     return res.status(200).json({
-        message:'Company information updated',
-        success: true
+      message: "Company information updated",
+      success: true,
     });
   } catch (error) {
     res.status(400).json({ message: error.message, success: false });
-  };
+  }
 };
 
-module.exports = { registerCompany, getCompany, getCompanyById, updateCompany};
+module.exports = { registerCompany, getCompany, getCompanyById, updateCompany };
