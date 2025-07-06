@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import useGetCompanyById from "@/hooks/useGetCompanyById";
 import axios from "axios";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -11,6 +12,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const CompanySetup = () => {
+  const params = useParams();
+  useGetCompanyById(params.id);
   const [input, setInput] = useState({
     name: "",
     description: "",
@@ -20,7 +23,6 @@ const CompanySetup = () => {
   });
   const {singleCompany} = useSelector(store => store.company)
   const [loading, setLoading] = useState(false);
-  const params = useParams();
   const navigate = useNavigate()
 
   const chnageEventHandler = (e) => {

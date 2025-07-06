@@ -16,12 +16,14 @@ import {
 import { Edit2, MoreHorizontal } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const CompaniesTable = () => {
   const { companies, searchCompanyByText } = useSelector(
     (store) => store.company
   );
   const [filterCompany, setFilterCompany] = useState(companies);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const filteredCompany =
@@ -65,7 +67,7 @@ const CompaniesTable = () => {
                     <MoreHorizontal />
                   </PopoverTrigger>
                   <PopoverContent className="w-32">
-                    <div className="flex items-center gap-2 w-fit">
+                    <div className="flex items-center gap-2 w-fit cursor-pointer" onClick={() => navigate(`/company/${company._id}`)}>
                       <Edit2 className="w-4" />
                       <span>Edit</span>
                     </div>
