@@ -25,8 +25,8 @@ const PostJob = () => {
     requirements: "",
     salary: "",
     location: "",
-    jobType: "",
-    experirnce: "",
+    jobtype: "",
+    experience: "",
     position: 0,
     companyId: "",
   });
@@ -47,7 +47,6 @@ const PostJob = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      console.log(input);
       const response = await axios.post(`${import.meta.env.VITE_JOB_API}/post`,input,{
         headers:{
           'Content-Type':'application/json'
@@ -126,9 +125,9 @@ const PostJob = () => {
               <Label>Job Type</Label>
               <Input
                 type="text"
-                name="jobType"
+                name="jobtype"
                 className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
-                value={input.jobType}
+                value={input.jobtype}
                 onChange={changeEventHandler}
               />
             </div>
@@ -136,9 +135,9 @@ const PostJob = () => {
               <Label>Experience</Label>
               <Input
                 type="text"
-                name="experirnce"
+                name="experience"
                 className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
-                value={input.experirnce}
+                value={input.experience}
                 onChange={changeEventHandler}
               />
             </div>

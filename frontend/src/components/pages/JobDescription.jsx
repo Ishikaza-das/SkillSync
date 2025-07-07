@@ -68,7 +68,7 @@ const JobDescription = () => {
     <div className="max-w-7xl mx-auto my-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-bold text-xl">Google</h1>
+          <h1 className="font-bold text-xl">{singleJob?.company?.name}</h1>
           <div className="flex items-center gap-2 mt-4">
             <Badge className="text-blue-700 font-bold" variant="ghost">
               {singleJob?.position} Positions
