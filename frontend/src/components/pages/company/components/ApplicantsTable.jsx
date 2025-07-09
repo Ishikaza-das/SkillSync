@@ -12,13 +12,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import axios from "axios";
 import { MoreHorizontal } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const shortListingStatus = ["Accepted", "Rejected"];
+
 const ApplicantsTable = () => {
   const { applicants } = useSelector((store) => store.application);
+  const statusHandler = async (status,id) => {
+    try {
+      const response = await axios.put(`${import.meta.env.VITE_APPLICANTS}/status/${id}`,{status},{
+        withCredentials:true
+      });
+      if(response.data.success){
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message)
+    }
+  }
   return (
     <div>
       <Table>
@@ -67,6 +83,7 @@ const ApplicantsTable = () => {
                         return (
                           <div
                             key={index}
+                            onClick={() => statusHandler(status, item._id)}
                             className="flex w-fit items-center my-2 cursor-pointer"
                           >
                             <span>{status}</span>
