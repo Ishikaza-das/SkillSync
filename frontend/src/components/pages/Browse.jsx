@@ -18,9 +18,7 @@ const Browse = () => {
     <div>
       <Navbar />
       <div className="max-w-7xl mx-auto my-10">
-        {/* <div className="flex items-center justify-between mb-10"> */}
           <h1 className="font-bold text-xl">Search Results {allJobs?.length}</h1>
-        {/* </div> */}
         <div className="grid grid-cols-3 gap-4">
           {allJobs.map((job) => {
             return <Job key={job?._id} job={job}/>;

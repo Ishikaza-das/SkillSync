@@ -33,31 +33,52 @@ const postJob = async (req,res) => {
     }
 };
 
-const getAllJobs = async (req,res) => {
-    try {
-        const keyword = req.query.keyword || '';
-        const query = {
-            $or:[
-                {title:{$regex:keyword, $options:'i'}},
-                {description:{$regex:keyword, $options:'i'}},
-            ]
-        };
-        const jobs = await Job.find(query).populate({
-            path:'company'
-        }).sort({createdAt: -1});
-        if(!jobs){
-            return res.status(404).json({
-                message:'Job not found',
-                success: false
-            });
-        };
-        return res.status(200).json({
-            jobs,
-            success: true
-        });
-    } catch (error) {
-        res.status(400).json({ message: error.message, success: false });
+const getAllJobs = async (req, res) => {
+  try {
+    const { keyword = '', location, jobtype, salary } = req.query;
+
+    const query = {
+      $or: [
+        { title: { $regex: keyword, $options: 'i' } },
+        { description: { $regex: keyword, $options: 'i' } }
+      ]
+    };
+
+    if (location) query.location = location;
+
+    if (jobtype) query.jobtype = jobtype;
+
+    if (salary) {
+      if (salary === '1-4 LPA') {
+        query.salary = { $gte: 1, $lte: 4 };
+      } else if (salary === '6-12 LPA') {
+        query.salary = { $gte: 6, $lte: 12 };
+      } else if (salary === 'Above 12 LPA') {
+        query.salary = { $gt: 12 };
+      }
     }
+
+    const jobs = await Job.find(query)
+      .populate('company')
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      jobs,
+      success: true
+    });
+
+  } catch (error) {
+    res.status(400).json({ message: error.message, success: false });
+  }
+};
+
+const getAllLocations = async (req, res) => {
+  try {
+    const locations = await Job.distinct("location");
+    return res.status(200).json({ locations, success: true });
+  } catch (error) {
+    res.status(400).json({ message: error.message, success: false });
+  }
 };
 
 const getJobById = async (req,res) => {
@@ -105,4 +126,4 @@ const getAdminJobs = async (req,res) => {
     }
 }
 
-module.exports = {postJob, getAllJobs, getJobById, getAdminJobs};
+module.exports = {postJob, getAllJobs, getJobById, getAdminJobs, getAllLocations};
