@@ -130,6 +130,12 @@ const JobDescription = () => {
           </span>
         </h1>
         <h1 className="font-bold my-1">
+          Job Type:{" "}
+          <span className="pl-4 font-normal text-gray-800">
+            {singleJob?.jobtype}
+          </span>
+        </h1>
+        <h1 className="font-bold my-1">
           Salary:{" "}
           <span className="pl-4 font-normal text-gray-800">
             {singleJob?.salary} LPA
