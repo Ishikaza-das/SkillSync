@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const getDataUri = require("../utils/datauri");
 const { default: cloudinary } = require("../utils/cloudinary");
 
-
 const register = async (req, res) => {
   try {
     const { fullname, email, phonenumber, password, role } = req.body;
@@ -18,7 +17,6 @@ const register = async (req, res) => {
     // const file = req.file;
     // const fileUri = getDataUri(file);
     // const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-
 
     const user = await User.findOne({ email });
     if (user) {
@@ -36,7 +34,7 @@ const register = async (req, res) => {
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
         profile.profilephoto = cloudResponse.secure_url;
       } catch (uploadError) {
-        console.error('File upload error:', uploadError);
+        console.error("File upload error:", uploadError);
       }
     }
 
@@ -50,7 +48,7 @@ const register = async (req, res) => {
       // profile:{
       //   profilephoto: cloudResponse.secure_url
       // }
-      profile
+      profile,
     });
     return res.status(201).json({
       message: "Account created successfully",
@@ -135,9 +133,13 @@ const logout = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const { fullname, email, phonenumber, bio, skills } = req.body;
-    const file = req.file;
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    let cloudResponse;
+    let resumeName;
+    if (req.file) {
+      const fileUri = getDataUri(req.file);
+      cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+      resumeName = req.file.originalname;
+    }
 
     let skillsArray;
     if (skills) {
@@ -168,7 +170,7 @@ const updateProfile = async (req, res) => {
     }
     if (cloudResponse) {
       user.profile.resume = cloudResponse.secure_url;
-      user.profile.resumename = file.originalname;
+      user.profile.resumename = resumeName;
     }
 
     await user.save();
