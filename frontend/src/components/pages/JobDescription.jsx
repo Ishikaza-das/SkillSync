@@ -84,7 +84,7 @@ const JobDescription = () => {
         <Button
           onClick={isApplied ? null : applyJobHandler}
           disabled={isApplied}
-          className={`rounded-lg h-10 ${
+          className={`cursor-pointer rounded-lg h-10 ${
             isApplied
               ? "bg-gray-600 cursor-not-allowed"
               : "bg-purple-600 hover:bg-violet-600"
