@@ -33,7 +33,6 @@ const FilterCard = () => {
   const [selectedSalary, setSelectedSalary] = useState('');
   const dispatch = useDispatch();
 
-  // Fetch locations on mount
   useEffect(() => {
     const fetchLocations = async () => {
       try {
@@ -51,7 +50,6 @@ const FilterCard = () => {
     fetchLocations();
   }, []);
 
-  // Reset all filters on initial load
   useEffect(() => {
     setSelectedLocation('');
     setSelectedJobType('');
@@ -59,7 +57,6 @@ const FilterCard = () => {
     dispatch(setSearchedQuery(''));
   }, [dispatch]);
 
-  // Fetch jobs when filters change
   useEffect(() => {
     const fetchFilteredJobs = async () => {
       try {
@@ -86,7 +83,6 @@ const FilterCard = () => {
       <h1 className='font-bold text-lg mb-3'>Filter Jobs</h1>
       <hr className='mb-4' />
 
-      {/* Location Filter */}
       <div className="mb-5">
         <h1 className="font-bold text-lg mb-2">Location</h1>
         <Select onValueChange={setSelectedLocation} value={selectedLocation}>
@@ -103,7 +99,6 @@ const FilterCard = () => {
         </Select>
       </div>
 
-      {/* Job Type Filter */}
       <div className="mb-5">
         <h1 className="font-bold text-lg mb-2">Job Type</h1>
         <RadioGroup value={selectedJobType} onValueChange={setSelectedJobType}>
@@ -119,7 +114,6 @@ const FilterCard = () => {
         </RadioGroup>
       </div>
 
-      {/* Salary Filter */}
       <div className="mb-5">
         <h1 className="font-bold text-lg mb-2">Salary</h1>
         <RadioGroup value={selectedSalary} onValueChange={setSelectedSalary}>
