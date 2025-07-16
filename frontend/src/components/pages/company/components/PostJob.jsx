@@ -10,14 +10,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import useGetJobById from "@/hooks/useGetJobById";
-import { setSingleJob } from "@/redux/jobSlice";
+import { setSingleJob } from "@/store/jobSlice";
 
 const PostJob = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useGetJobById(id); // ✅ fetch single job
+  useGetJobById(id); 
   const { singleJob } = useSelector((store) => store.job);
 
   const [input, setInput] = useState({
@@ -67,7 +67,6 @@ const PostJob = () => {
     }
   };
 
-  // Prefill form when job is loaded
   useEffect(() => {
     if (singleJob) {
       setInput({
@@ -84,7 +83,6 @@ const PostJob = () => {
     }
   }, [singleJob]);
 
-  // Clear state on unmount
   useEffect(() => {
     return () => dispatch(setSingleJob(null));
   }, []);
