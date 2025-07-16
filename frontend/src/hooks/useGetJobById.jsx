@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { setSingleJob } from "@/redux/jobSlice";
+import { setSingleJob } from "@/store/jobSlice";
 
 const useGetJobById = (id) => {
   const dispatch = useDispatch();
