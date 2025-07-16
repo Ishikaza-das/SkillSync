@@ -140,9 +140,15 @@ const PostJob = () => {
   };
 
   return (
-    <div>
-      <Navbar />
-      <div className="flex items-center justify-center w-screen my-5">
+  <div>
+    <Navbar />
+    <div className="flex items-center justify-center w-screen my-5">
+      {isEditMode && !singleJob ? (
+        <div className="flex items-center justify-center min-h-[200px]">
+          <Loader2 className="h-6 w-6 animate-spin text-purple-600 mr-2" />
+          <span className="text-sm">Loading job data...</span>
+        </div>
+      ) : (
         <form
           className="p-8 max-w-4xl border border-gray-200 shadow-lg rounded-md"
           onSubmit={submitHandler}
@@ -270,9 +276,10 @@ const PostJob = () => {
             </p>
           )}
         </form>
-      </div>
+      )}
     </div>
-  );
+  </div>
+);
 };
 
 export default PostJob;
