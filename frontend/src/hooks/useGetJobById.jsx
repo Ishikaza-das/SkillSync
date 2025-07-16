@@ -1,30 +1,24 @@
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setSingleJob } from "@/store/jobSlice";
 
-const useGetJobById = (id) => {
+const useGetJobById = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (!id) return;
-
-    const fetchJob = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_JOB_API}/single/${id}`,
-          { withCredentials: true }
-        );
-        if (res.data.success) {
-          dispatch(setSingleJob(res.data.job));
-        }
-      } catch (error) {
-        console.error("Failed to fetch job by ID", error);
+  const fetchJobById = async (id) => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_JOB_API}/get/${id}`, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        dispatch(setSingleJob(res.data.job));
       }
-    };
+    } catch (error) {
+      console.error("Error fetching job by ID:", error);
+    }
+  };
 
-    fetchJob();
-  }, [id, dispatch]);
+  return fetchJobById;
 };
 
 export default useGetJobById;

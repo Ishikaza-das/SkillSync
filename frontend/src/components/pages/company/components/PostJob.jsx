@@ -17,8 +17,8 @@ const PostJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useGetJobById(id); 
   const { singleJob } = useSelector((store) => store.job);
+  const fetchJobById = useGetJobById();
 
   const [input, setInput] = useState({
     title: "",
@@ -34,38 +34,11 @@ const PostJob = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const changeEventHandler = (e) => {
-    setInput({ ...input, [e.target.name]: e.target.value });
-  };
-
-  const back = () => {
-    navigate("/company/jobs");
-  };
-
-  const submitHandler = async (e) => {
-    e.preventDefault();
-
-    try {
-      setLoading(true);
-      const res = await axios.put(
-        `${import.meta.env.VITE_JOB_API}/update/${id}`,
-        input,
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (res.data.success) {
-        toast.success("Job updated successfully");
-        navigate("/company/jobs");
-      }
-    } catch (error) {
-      toast.error("Failed to update job");
-      console.error(error);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (id) {
+      fetchJobById(id); 
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     if (singleJob) {
@@ -87,6 +60,47 @@ const PostJob = () => {
     return () => dispatch(setSingleJob(null));
   }, []);
 
+  const changeEventHandler = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const back = () => {
+    navigate("/company/jobs");
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const dataToSend = {
+        ...input,
+        requirements: input.requirements.split(",").map((r) => r.trim()),
+      };
+
+      const url = id
+        ? `${import.meta.env.VITE_JOB_API}/update/${id}`
+        : `${import.meta.env.VITE_JOB_API}/create`;
+
+      const res = id
+        ? await axios.put(url, dataToSend, { withCredentials: true })
+        : await axios.post(url, dataToSend, { withCredentials: true });
+
+      if (res.data.success) {
+        toast.success(
+          `Job ${id ? "updated" : "created"} successfully`
+        );
+        navigate("/company/jobs");
+      }
+    } catch (error) {
+      toast.error(`Failed to ${id ? "update" : "create"} job`);
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -102,7 +116,9 @@ const PostJob = () => {
               <ArrowLeft />
               <span>Back</span>
             </Button>
-            <h1 className="font-bold text-xl">Update Job</h1>
+            <h1 className="font-bold text-xl">
+              {id ? "Update Job" : "Post New Job"}
+            </h1>
           </div>
           <div className="grid grid-cols-2 gap-6 px-8">
             <div className="space-y-2">
@@ -175,11 +191,11 @@ const PostJob = () => {
             {loading ? (
               <Button className="w-full" variant="purple2">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Updating...
+                {id ? "Updating..." : "Posting..."}
               </Button>
             ) : (
               <Button type="submit" className="w-full" variant="purple2">
-                Update Job
+                {id ? "Update Job" : "Post Job"}
               </Button>
             )}
           </div>
@@ -188,5 +204,8 @@ const PostJob = () => {
     </div>
   );
 };
+
+
+
 
 export default PostJob;
