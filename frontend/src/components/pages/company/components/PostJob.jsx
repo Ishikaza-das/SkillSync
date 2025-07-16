@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import useGetJobById from "@/hooks/useGetJobById";
-import { clearSingleJob } from "@/redux/jobSlice";
+import { clearSingleJob } from "@/store/jobSlice";
 
 const PostJob = () => {
   const [input, setInput] = useState({
