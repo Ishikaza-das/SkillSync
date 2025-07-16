@@ -1,5 +1,5 @@
 const Company = require("../models/company.model");
-const { default: cloudinary } = require("../utils/cloudinary");
+const cloudinary = require('../utils/cloudinary');
 const getDataUri = require("../utils/datauri");
 
 const registerCompany = async (req, res) => {
@@ -74,14 +74,14 @@ const updateCompany = async (req, res) => {
   try {
     const { name, description, website, location } = req.body;
     let logo;
-    // const file = req.file;
+    const file = req.file;
     if (req.file) {
       try {
         const fileUri = getDataUri(file);
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
         logo = cloudResponse.secure_url;
       } catch (error) {
-        console.error("File upload error:", uploadError);
+        console.error("File upload error:", error);
       }
     }
 
