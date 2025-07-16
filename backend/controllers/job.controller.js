@@ -104,6 +104,51 @@ const getJobById = async (req,res) => {
     };
 ;}
 
+const updateJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const updateFields = req.body;
+
+    if (updateFields.requirements) {
+      updateFields.requirements = updateFields.requirements.split(',');
+    }
+
+    if (updateFields.salary) {
+      updateFields.salary = Number(updateFields.salary);
+    }
+
+    if (updateFields.experience) {
+      updateFields.experienceLevel = updateFields.experience;
+      delete updateFields.experience;
+    }
+
+    if (updateFields.companyId) {
+      updateFields.company = updateFields.companyId;
+      delete updateFields.companyId;
+    }
+
+    const updatedJob = await Job.findByIdAndUpdate(jobId, updateFields, {
+      new: true,
+    });
+
+    if (!updatedJob) {
+      return res.status(404).json({
+        message: "Job not found",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Job updated successfully",
+      job: updatedJob,
+      success: true,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message, success: false });
+  }
+};
+
+
 const getAdminJobs = async (req,res) => {
     try {
         const adminId = req.id;
@@ -126,4 +171,4 @@ const getAdminJobs = async (req,res) => {
     }
 }
 
-module.exports = {postJob, getAllJobs, getJobById, getAdminJobs, getAllLocations};
+module.exports = {postJob, getAllJobs, getJobById, getAdminJobs, getAllLocations, updateJob};

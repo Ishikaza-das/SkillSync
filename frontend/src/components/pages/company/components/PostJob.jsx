@@ -32,7 +32,9 @@ const PostJob = () => {
     companyId: "",
   });
 
+  const [originalData, setOriginalData] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditMode = Boolean(id);
@@ -44,17 +46,19 @@ const PostJob = () => {
 
   useEffect(() => {
     if (isEditMode && singleJob) {
-      setInput({
+      const jobData = {
         title: singleJob.title || "",
         description: singleJob.description || "",
-        requirements: singleJob.requirements || "",
+        requirements: (singleJob.requirements || []).join(", "),
         salary: singleJob.salary || "",
         location: singleJob.location || "",
         jobtype: singleJob.jobtype || "",
         experience: singleJob.experienceLevel || "",
         position: singleJob.position || 0,
-        companyId: singleJob.companyId || "",
-      });
+        companyId: singleJob.company?._id || "",
+      };
+      setInput(jobData);
+      setOriginalData(jobData);
     }
   }, [singleJob, isEditMode]);
 
@@ -71,19 +75,46 @@ const PostJob = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
-      setLoading(true);
+      let url = `${import.meta.env.VITE_JOB_API}/post`;
+      let method = "post";
+      let dataToSend = { ...input };
 
-      const url = isEditMode
-        ? `${import.meta.env.VITE_JOB_API}/update/${id}`
-        : `${import.meta.env.VITE_JOB_API}/post`;
+      dataToSend.requirements = input.requirements
+        .split(",")
+        .map((r) => r.trim());
 
-      const method = isEditMode ? "put" : "post";
+      if (isEditMode && originalData) {
+        dataToSend = {};
+        for (let key in input) {
+          const newValue =
+            key === "requirements"
+              ? input.requirements.split(",").map((r) => r.trim())
+              : input[key];
+          const oldValue =
+            key === "requirements"
+              ? originalData.requirements.split(",").map((r) => r.trim())
+              : originalData[key];
 
-      const response = await axios[method](url, input, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+          if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+            dataToSend[key] = newValue;
+          }
+        }
+
+        if (Object.keys(dataToSend).length === 0) {
+          toast.info("No changes made.");
+          setLoading(false);
+          return;
+        }
+
+        url = `${import.meta.env.VITE_JOB_API}/update/${id}`;
+        method = "put";
+      }
+
+      const response = await axios[method](url, dataToSend, {
+        headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
 
@@ -92,7 +123,6 @@ const PostJob = () => {
         navigate("/company/jobs");
       }
     } catch (error) {
-      console.error(error);
       toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -113,7 +143,6 @@ const PostJob = () => {
               <Input
                 type="text"
                 name="title"
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
                 value={input.title}
                 onChange={changeEventHandler}
               />
@@ -121,9 +150,7 @@ const PostJob = () => {
             <div>
               <Label>Description</Label>
               <Textarea
-                type="text"
                 name="description"
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
                 value={input.description}
                 onChange={changeEventHandler}
               />
@@ -133,17 +160,15 @@ const PostJob = () => {
               <Input
                 type="text"
                 name="requirements"
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
                 value={input.requirements}
                 onChange={changeEventHandler}
               />
             </div>
             <div>
-              <Label>{'Salary (in LPA)'}</Label>
+              <Label>Salary (in LPA)</Label>
               <Input
                 type="text"
                 name="salary"
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
                 value={input.salary}
                 onChange={changeEventHandler}
               />
@@ -153,7 +178,6 @@ const PostJob = () => {
               <Input
                 type="text"
                 name="location"
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
                 value={input.location}
                 onChange={changeEventHandler}
               />
@@ -163,7 +187,6 @@ const PostJob = () => {
               <Input
                 type="text"
                 name="jobtype"
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
                 value={input.jobtype}
                 onChange={changeEventHandler}
               />
@@ -173,17 +196,15 @@ const PostJob = () => {
               <Input
                 type="text"
                 name="experience"
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
                 value={input.experience}
                 onChange={changeEventHandler}
               />
             </div>
             <div>
-              <Label>No of Position</Label>
+              <Label>No of Positions</Label>
               <Input
                 type="number"
                 name="position"
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
                 value={input.position}
                 onChange={changeEventHandler}
               />
@@ -194,13 +215,16 @@ const PostJob = () => {
                 <Select
                   onValueChange={selectChangeHandler}
                   defaultValue={
-                    companies.find(
-                      (c) => c._id === input.companyId
-                    )?.name?.toLowerCase() || ""
+                    companies.find((c) => c._id === input.companyId)?.name?.toLowerCase() || ""
                   }
                 >
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a Company" />
+                    <SelectValue placeholder="Select a Company">
+                      {
+                        companies.find((c) => c._id === input.companyId)
+                          ?.name || "Select a Company"
+                      }
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
@@ -220,17 +244,18 @@ const PostJob = () => {
           </div>
 
           {loading ? (
-            <Button className="my-4 w-full h-10" variant="purple2">
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait...
+            <Button className="my-4 w-full" disabled>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait...
             </Button>
           ) : (
-            <Button type="submit" className="my-4 w-full" variant="purple2">
+            <Button type="submit" className="my-4 w-full">
               {isEditMode ? "Update Job" : "Post New Job"}
             </Button>
           )}
 
           {companies.length === 0 && (
-            <p className="text-xs font-bold text-center my-3 text-red-500">
+            <p className="text-xs font-bold text-center text-red-500">
               *Please create a company before posting a job.
             </p>
           )}
