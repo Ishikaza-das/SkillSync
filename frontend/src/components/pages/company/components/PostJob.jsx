@@ -14,10 +14,11 @@ import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import useGetJobById from "@/hooks/useGetJobById";
+import { clearSingleJob } from "@/store/jobSlice";
 
 const PostJob = () => {
   const [input, setInput] = useState({
@@ -41,6 +42,8 @@ const PostJob = () => {
 
   const { companies } = useSelector((store) => store.company);
   const { singleJob } = useSelector((store) => store.job);
+
+  const dispatch = useDispatch()
 
   useGetJobById(isEditMode ? id : null);
 
@@ -120,6 +123,7 @@ const PostJob = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
+        dispatch(clearSingleJob());
         navigate("/company/jobs");
       }
     } catch (error) {
