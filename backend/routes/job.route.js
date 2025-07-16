@@ -4,7 +4,7 @@ const {postJob, getAllJobs, getJobById, getAdminJobs, getAllLocations} = require
 const isAuthenticated = require('../middleware/authenticated');
 
 router.post('/post',isAuthenticated,postJob);
-router.get('/get', getAllJobs);
+router.get('/get',isAuthenticated, getAllJobs);
 router.get('/locations',isAuthenticated, getAllLocations);
 router.get('/getadminjobs',isAuthenticated, getAdminJobs);
 router.get('/get/:id',isAuthenticated, getJobById);
