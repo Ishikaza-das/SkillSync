@@ -36,7 +36,6 @@ const PostJob = () => {
 
   useEffect(() => {
     if (id) {
-      console.log(id);
       fetchJobById(id); 
     }
   }, [id]);
