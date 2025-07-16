@@ -51,7 +51,7 @@ const PostJob = () => {
         salary: singleJob.salary || "",
         location: singleJob.location || "",
         jobtype: singleJob.jobtype || "",
-        experience: singleJob.experience || "",
+        experience: singleJob.experienceLevel || "",
         position: singleJob.position || 0,
         companyId: singleJob.companyId || "",
       });
