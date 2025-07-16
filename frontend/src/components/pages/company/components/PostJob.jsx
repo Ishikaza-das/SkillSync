@@ -133,6 +133,7 @@ const PostJob = () => {
               <Label>Position</Label>
               <Input
                 name="position"
+                type="number"
                 value={input.position}
                 onChange={changeEventHandler}
               />
@@ -157,7 +158,6 @@ const PostJob = () => {
               <Label>Salary</Label>
               <Input
                 name="salary"
-                type="number"
                 value={input.salary}
                 onChange={changeEventHandler}
               />
