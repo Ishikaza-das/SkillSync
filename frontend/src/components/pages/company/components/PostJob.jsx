@@ -123,7 +123,6 @@ const PostJob = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
-        dispatch(clearSingleJob());
         navigate("/company/jobs");
       }
     } catch (error) {
@@ -132,6 +131,12 @@ const PostJob = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+  return () => {
+    dispatch(clearSingleJob()); 
+  };
+}, []);
 
   return (
     <div>
