@@ -244,12 +244,12 @@ const PostJob = () => {
           </div>
 
           {loading ? (
-            <Button className="my-4 w-full" disabled>
+            <Button className="my-4 w-full" variant='purple2' disabled>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Please wait...
             </Button>
           ) : (
-            <Button type="submit" className="my-4 w-full">
+            <Button type="submit" className="my-4 w-full" variant='purple2'>
               {isEditMode ? "Update Job" : "Post New Job"}
             </Button>
           )}
