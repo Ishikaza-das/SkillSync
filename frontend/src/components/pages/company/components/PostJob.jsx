@@ -49,15 +49,15 @@ const PostJob = () => {
   useEffect(() => {
     if (isEditMode && singleJob) {
       const jobData = {
-        title: singleJob.title || "",
-        description: singleJob.description || "",
-        requirements: (singleJob.requirements || []).join(", "),
-        salary: singleJob.salary || "",
-        location: singleJob.location || "",
-        jobtype: singleJob.jobtype || "",
-        experience: singleJob.experienceLevel || "",
-        position: singleJob.position || 0,
-        companyId: singleJob.company?._id || "",
+        title: singleJob?.title || "",
+        description: singleJob?.description || "",
+        requirements: (singleJob?.requirements || []).join(", "),
+        salary: singleJob?.salary || "",
+        location: singleJob?.location || "",
+        jobtype: singleJob?.jobtype || "",
+        experience: singleJob?.experienceLevel || "",
+        position: singleJob?.position || 0,
+        companyId: singleJob?.company?._id || "",
       };
       setInput(jobData);
       setOriginalData(jobData);
@@ -66,7 +66,7 @@ const PostJob = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(clearSingleJob());
+      dispatch(clearSingleJob(null));
     };
   }, [dispatch]);
 
