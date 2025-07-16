@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import useGetJobById from "@/hooks/useGetJobById";
-import { clearSingleJob } from "@/store/jobSlice";
+import { clearSingleJob } from "@/redux/jobSlice";
 
 const PostJob = () => {
   const [input, setInput] = useState({
@@ -40,10 +40,9 @@ const PostJob = () => {
   const { id } = useParams();
   const isEditMode = Boolean(id);
 
+  const dispatch = useDispatch();
   const { companies } = useSelector((store) => store.company);
   const { singleJob } = useSelector((store) => store.job);
-
-  const dispatch = useDispatch()
 
   useGetJobById(isEditMode ? id : null);
 
@@ -65,6 +64,12 @@ const PostJob = () => {
     }
   }, [singleJob, isEditMode]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearSingleJob());
+    };
+  }, [dispatch]);
+
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -73,7 +78,9 @@ const PostJob = () => {
     const selectedCompany = companies.find(
       (company) => company.name.toLowerCase() === value
     );
-    setInput({ ...input, companyId: selectedCompany._id });
+    if (selectedCompany) {
+      setInput({ ...input, companyId: selectedCompany._id });
+    }
   };
 
   const submitHandler = async (e) => {
@@ -131,12 +138,6 @@ const PostJob = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-  return () => {
-    dispatch(clearSingleJob()); 
-  };
-}, []);
 
   return (
     <div>
@@ -253,12 +254,12 @@ const PostJob = () => {
           </div>
 
           {loading ? (
-            <Button className="my-4 w-full" variant='purple2' disabled>
+            <Button className="my-4 w-full" variant="purple2" disabled>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Please wait...
             </Button>
           ) : (
-            <Button type="submit" className="my-4 w-full" variant='purple2'>
+            <Button type="submit" className="my-4 w-full" variant="purple2">
               {isEditMode ? "Update Job" : "Post New Job"}
             </Button>
           )}
