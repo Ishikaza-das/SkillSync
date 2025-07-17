@@ -3,7 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import useGetJobById from "@/hooks/useGetJobById";
 import useGetAllCompanies from "@/hooks/useGetAllCompanies";
 import { setSingleJob } from "@/store/jobSlice";
@@ -19,7 +26,7 @@ const PostJob = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const fetchJobById = useGetJobById();
-  useGetAllCompanies(); 
+  useGetAllCompanies();
 
   const { singleJob } = useSelector((store) => store.job);
   const { companies } = useSelector((store) => store.company);
@@ -47,15 +54,15 @@ const PostJob = () => {
   useEffect(() => {
     if (singleJob) {
       setInput({
-        title: singleJob.title || "",
-        description: singleJob.description || "",
-        requirements: singleJob.requirements?.join(", ") || "",
-        salary: singleJob.salary || "",
-        location: singleJob.location || "",
-        jobtype: singleJob.jobtype || "",
-        experience: singleJob.experienceLevel || "",
-        position: singleJob.position || "",
-        companyId: singleJob.company?._id || "",
+        title: singleJob?.title || "",
+        description: singleJob?.description || "",
+        requirements: singleJob?.requirements?.join(", ") || "",
+        salary: singleJob?.salary || "",
+        location: singleJob?.location || "",
+        jobtype: singleJob?.jobtype || "",
+        experience: singleJob?.experienceLevel || "",
+        position: singleJob?.position || "",
+        companyId: singleJob?.company?._id || "",
       });
     }
   }, [singleJob]);
@@ -69,7 +76,9 @@ const PostJob = () => {
   };
 
   const selectChangeHandler = (value) => {
-    const selectedCompany = companies.find((company) => company.name.toLowerCase() === value);
+    const selectedCompany = companies.find(
+      (company) => company.name.toLowerCase() === value
+    );
     if (selectedCompany) {
       setInput({ ...input, companyId: selectedCompany._id });
     }
@@ -80,10 +89,17 @@ const PostJob = () => {
     try {
       setLoading(true);
       const dataToSend = {
-        ...input,
+        title: input.title,
+        description: input.description,
         requirements: input.requirements.split(",").map((r) => r.trim()),
+        salary: Number(input.salary),
+        location: input.location,
+        jobtype: input.jobtype, 
+        experience: input.experience,
+        position: input.position,
+        companyId: input.companyId,
       };
-
+      console.log(dataToSend);
       const url = id
         ? `${import.meta.env.VITE_JOB_API}/update/${id}`
         : `${import.meta.env.VITE_JOB_API}/post`;
@@ -112,7 +128,10 @@ const PostJob = () => {
     <div>
       <Navbar />
       <div className="flex items-center justify-center w-screen my-5">
-        <form onSubmit={submitHandler} className="p-8 max-w-4xl border border-gray-200 shadow-lg rounded-md">
+        <form
+          onSubmit={submitHandler}
+          className="p-8 max-w-4xl border border-gray-200 shadow-lg rounded-md"
+        >
           <div className="flex items-center gap-5 mb-8">
             <Button
               variant="outline"
@@ -123,7 +142,9 @@ const PostJob = () => {
               <ArrowLeft />
               <span>Back</span>
             </Button>
-            <h1 className="font-bold text-xl">{id ? "Update Job" : "Post New Job"}</h1>
+            <h1 className="font-bold text-xl">
+              {id ? "Update Job" : "Post New Job"}
+            </h1>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -199,7 +220,7 @@ const PostJob = () => {
             <div>
               <Label>No. of Positions</Label>
               <Input
-                type="number"
+                type="text"
                 name="position"
                 value={input.position}
                 onChange={changeEventHandler}
@@ -210,9 +231,12 @@ const PostJob = () => {
             {companies.length > 0 && (
               <div>
                 <Label>Company</Label>
-                <Select onValueChange={selectChangeHandler} defaultValue={
-                  companies.find(c => c._id === input.companyId)?.name?.toLowerCase()
-                }>
+                <Select
+                  onValueChange={selectChangeHandler}
+                  defaultValue={companies
+                    .find((c) => c._id === input.companyId)
+                    ?.name?.toLowerCase()}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a Company" />
                   </SelectTrigger>
@@ -234,12 +258,12 @@ const PostJob = () => {
           </div>
 
           {loading ? (
-            <Button className="w-full my-4" disabled>
+            <Button className="w-full my-4" disabled variant="purple2">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Please wait...
             </Button>
           ) : (
-            <Button type="submit" className="w-full my-4">
+            <Button type="submit" className="w-full my-4" variant="purple2">
               {id ? "Update Job" : "Post Job"}
             </Button>
           )}
